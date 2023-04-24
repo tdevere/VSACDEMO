@@ -50,7 +50,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      appcenter login --token 
+      appcenter login --token $APPCENTERTOKEN
       
       appcenter test generate uitest --platform android --output-path /Users/runner/work/1/a/GeneratedTest
       
