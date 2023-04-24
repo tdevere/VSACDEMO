@@ -20,23 +20,17 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      SLN_PATH=$(find $APPCENTER_SOURCE_DIRECTORY -iname '*.sln' -type f -print0)
-      echo "SLN_PATH = $SLN_PATH"
+      $SLN_PATH = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.sln -recurse
+      $AllProjects = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.csproj -Exclude "*Android*.csproj" -Recurse
+
+      write-host $SLN_PATH
+      write-host $AllProjects
       
-      UWP_PATHS=$(find $APPCENTER_SOURCE_DIRECTORY -iname '*UWP*.csproj' -type f -print0 )
-      echo " UWP_PATHS = $UWP_PATHS"
-      for p in "$UWP_PATHS"; do
-        echo "Removing $p from $SLN_PATH" || true
-        dotnet sln $SLN_PATH remove $p || true
-      done
-      
-      ANDROID_PATHS=$(find $APPCENTER_SOURCE_DIRECTORY -iname '*Android*.csproj' -type f -print0 )
-      dotnet sln '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.sln' remove '/Users/runner/work/1/s/VSACDEMO/VSACDEMO/VSACDEMO.iOS/VSACDEMO.iOS.csproj'
-      echo "ANDROID_PATHS = $ANDROID_PATHS"      
-        for p in "$ANDROID_PATHS"; do
-            echo "Removing $p from $SLN_PATH" || true
-            dotnet sln $SLN_PATH remove $p || true
-        done
+      foreach ($project in $AllProjects)
+      {
+          write-host "Removing $project from $SLN_PATH"
+          dotnet sln $SLN_PATH remove $project
+      }      
 
 - task: NuGetCommand@2
   inputs:
