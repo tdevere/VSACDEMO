@@ -21,7 +21,7 @@ steps:
     targetType: 'inline'
     script: |
       $SLN_PATH = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.sln -recurse
-      $AllProjects = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.csproj -Exclude "*Android*.csproj" -Recurse
+      $AllProjects = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.csproj -Exclude "*Android*.csproj" -Exclude "VSACDEMO.csproj" -Recurse
 
       write-host $SLN_PATH
       write-host $AllProjects
