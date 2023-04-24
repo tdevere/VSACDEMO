@@ -20,8 +20,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      dotnet sln '/Users/runner/work/1/s/VSACDEMO/*.sln' remove /Users/runner/work/1/s/VSACDEMO/*iOS.csproj'
-      dotnet sln '/Users/runner/work/1/s/VSACDEMO/' remove /Users/runner/work/1/s/VSACDEMO/*UWP.csproj'
+      dotnet sln '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.sln' remove '/Users/runner/work/1/s/VSACDEMO/VSACDEMO/VSACDEMO.iOS/VSACDEMO.iOS.csproj'
+      '
+      dotnet sln '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.sln' remove '/Users/runner/work/1/s/VSACDEMO/VSACDEMO/VSACDEMO.UWP/VSACDEMO.UWP.csproj'
 
 - task: NuGetCommand@2
   inputs:
