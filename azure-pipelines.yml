@@ -52,7 +52,7 @@ steps:
     appFile: '/Users/runner/work/1/b/Release/com.companyname.vsacdemo.apk'
     artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
     frameworkOption: 'xcuitest'
-    xcUITestBuildDirectory: '/Users/runner/work/1/a/GeneratedTest'
+    xcUITestBuildDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
     credentialsOption: 'serviceEndpoint'
     serverEndpoint: 'AppCenter'
     appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
