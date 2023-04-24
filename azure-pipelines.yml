@@ -47,3 +47,27 @@ steps:
 # Add steps that test, sign, and distribute an app, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      appcenter login --token 
+      
+      appcenter test generate uitest --platform android --output-path /Users/runner/work/1/a/GeneratedTest
+      
+      nuget restore -NonInteractive /Users/runner/work/1/a/GeneratedTest/AppCenter.UITest.Android.sln
+      
+      xbuild /Users/runner/work/1/a/GeneratedTest/AppCenter.UITest.Android.sln /p:Configuration=Release
+      
+      appcenter test prepare uitest --artifacts-dir /Users/runner/work/1/a/Artifacts --app-path /Users/runner/work/1/a/build/com.ManualTestOnDevice.ReleaseTest1.apk --build-dir /Users/runner/work/1/a/GeneratedTest/AppCenter.UITest.Android/bin/Release --debug --quiet
+- task: AppCenterTest@1
+  inputs:
+    appFile: '/Users/runner/work/1/b/Release/com.companyname.vsacdemo.apk'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+    frameworkOption: 'xcuitest'
+    xcUITestBuildDirectory: '/Users/runner/work/1/a/GeneratedTest'
+    xcUITestIpaFile: '/Users/runner/work/1/a/GeneratedTest'
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'AppCenter'
+    appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
+    devices: 'VSAC-DEMOS/deviceset1'
+    localeOption: 'en_US'
