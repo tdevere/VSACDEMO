@@ -16,6 +16,13 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      dotnet sln '/Users/runner/work/1/s/VSACDEMO/*.sln' remove /Users/runner/work/1/s/VSACDEMO/*iOS.csproj'
+      dotnet sln '/Users/runner/work/1/s/VSACDEMO/' remove /Users/runner/work/1/s/VSACDEMO/*UWP.csproj'
+
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '**/*.sln'
