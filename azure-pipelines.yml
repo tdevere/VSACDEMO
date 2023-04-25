@@ -47,61 +47,11 @@ steps:
   inputs:
     secureFile: 'android_keystore.jks'
 
-- task: AndroidSigning@3
-  inputs:
-    apkFiles: '**/*.apk'
-    apksignerKeystoreFile: '$(Agent.TempDirectory)/keystore'
-    apksignerKeystorePassword: $(KeystorePassword)
-    apksignerKeystoreAlias: $(KeystoreAlias)
-    apksignerKeyPassword: $(KeyPassword)
-- task: PublishBuildArtifacts@1
-  displayName: Publish build
-  inputs:
-    PathtoPublish: $(build.artifactstagingdirectory)/build
-    ArtifactName: build
-
-- task: CmdLine@1
-  displayName: Generate UITest tests
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
-  inputs:
-    filename: appcenter
-    arguments: >-
-      test generate uitest --platform "android" --output-path
-      "$(Build.ArtifactStagingDirectory)/GeneratedTest"
-
-- task: NuGetInstaller@0
-  displayName: Restore Nuget
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
-  inputs:
-    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
-- task: MSBuild@1
-  displayName: Build UITest project
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
-  inputs:
-    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
-    configuration: Release
-    logProjectEvents: true
-    createLogFile: true
-    msbuildVersion: "14.0"
-
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      echo $(Build.ArtifactStagingDirectory)
-      Get-ChildItem -Path $(Build.ArtifactStagingDirectory) -recurse -depth 2
+      $certs = get-childitem -recurse -filter *.jks
+      $certs | % { write-host $_.FullPath }
 
-- task: AppCenterTest@1
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
-  inputs:
-    app: "/Users/runner/work/1/b/Release/com.companyname.vsacdemo.apk"
-    artifactsDir: $(Build.ArtifactStagingDirectory)/Artifacts
-    framework: uitest
-    uitestBuildDir: >-
-      '/Users/runner/work/1/a/GeneratedTest/AppCenter.UITest.Android/bin/Release'
-      uitestStoreFile: '''
-      appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
-      devices: any_top_1_device
-      series: launch-tests  
-      runOpts: ' -p msft/test-run-origin=Build/Launch'
-      showDebugOutput: true
+
