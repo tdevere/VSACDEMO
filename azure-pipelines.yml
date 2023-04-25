@@ -51,7 +51,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $certs = get-childitem -recurse -filter *.jks
-      write-host $certs
+      Get-ChildItem -filter *.jks -Path $(Build.ArtifactStagingDirectory) -recurse | write-host $_
 
 
