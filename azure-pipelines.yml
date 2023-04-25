@@ -52,6 +52,6 @@ steps:
     targetType: 'inline'
     script: |
       $certs = get-childitem -recurse -filter *.jks
-      $certs | % { write-host $_ }
+      write-host $certs
 
 
