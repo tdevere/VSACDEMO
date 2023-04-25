@@ -33,7 +33,8 @@ steps:
       write-host (${KeystorePassword}).Length
       write-host (${KeystoreAlias}).Length
       write-host (${KeyPassword}).Length
-      write-host ([System.Environment]::GetEnvironmentVariables())
+      $vars = ([System.Environment]::GetEnvironmentVariables())
+      write-host $vars 
 
 - task: NuGetCommand@2
   inputs:
