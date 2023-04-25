@@ -30,11 +30,12 @@ steps:
           write-host "Removing $project from $SLN_PATH"
           dotnet sln $SLN_PATH remove $project
       }      
-      write-host ($(KeystorePassword)).Length
-      write-host ($(KeystoreAlias)).Length
-      write-host ($(KeyPassword)).Length
+      write-host $(KeystorePassword)
+      write-host $(KeystoreAlias)
+      write-host $(KeyPassword)
       $vars = ([System.Environment]::GetEnvironmentVariables())
-      $vars | % { write-host ($_)}
+      $vars.Keys
+      $var.Values
 
 - task: NuGetCommand@2
   inputs:
