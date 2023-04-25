@@ -30,12 +30,6 @@ steps:
           write-host "Removing $project from $SLN_PATH"
           dotnet sln $SLN_PATH remove $project
       }      
-      write-host $(KeystorePassword)
-      write-host $(KeystoreAlias)
-      write-host $(KeyPassword)
-      $vars = ([System.Environment]::GetEnvironmentVariables())
-      $vars.Keys
-      $var.Values
 
 - task: NuGetCommand@2
   inputs:
@@ -55,8 +49,8 @@ steps:
   inputs:
     apkFiles: '**/*.apk'
     apksignerKeystoreFile: 'android_keystore.jks'
-    apksignerKeystorePassword: $(KeystorePassword)
-    apksignerKeystoreAlias: $(KeystoreAlias)
+    apksignerKeystorePassword: $(KeyStorePassword)
+    apksignerKeystoreAlias: $(KeyStoreAlias)
     apksignerKeyPassword: $(KeyPassword)
 - task: PublishBuildArtifacts@1
   displayName: Publish build
