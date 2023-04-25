@@ -48,14 +48,16 @@ steps:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 - task: AppCenterTest@1
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
-    appFile: '/Users/runner/work/1/b/Release/com.companyname.vsacdemo.apk'
-    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
-    frameworkOption: 'xcuitest'
-    xcUITestBuildDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
-    credentialsOption: 'serviceEndpoint'
-    serverEndpoint: 'AppCenter'
-    appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
-    devices: 'VSAC-DEMOS/deviceset1'
-    localeOption: 'en_US'
-    showDebugOutput: true
+    app: $(build.artifactstagingdirectory)/build/**/*.apk
+    artifactsDir: $(Build.ArtifactStagingDirectory)/Artifacts
+    framework: uitest
+    uitestBuildDir: >-
+      $(Build.ArtifactStagingDirectory)/GeneratedTest/AppCenter.UITest.Android/bin/Release
+      uitestStoreFile: ''
+      appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
+      devices: any_top_1_device
+      series: launch-tests  
+      runOpts: ' -p msft/test-run-origin=Build/Launch'
+      showDebugOutput: true
