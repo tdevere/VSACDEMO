@@ -1,0 +1,61 @@
+# Xamarin.Android
+trigger:
+- master
+
+pool:
+  vmImage: 'macos-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $SLN_PATH = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.sln -recurse
+      $AllProjects = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.csproj -Exclude "*Android*.csproj", "VSACDEMO.csproj" -Recurse
+
+      write-host $SLN_PATH
+      write-host $AllProjects
+      
+      foreach ($project in $AllProjects)
+      {
+          write-host "Removing $project from $SLN_PATH"
+          dotnet sln $SLN_PATH remove $project
+      }      
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
+
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/*droid*.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+# Build a Xamarin.Android project.
+# Add steps that test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+
+- task: AppCenterTest@1
+  inputs:
+    appFile: '/Users/runner/work/1/b/Release/com.companyname.vsacdemo.apk'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+    frameworkOption: 'xcuitest'
+    xcUITestBuildDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'AppCenter'
+    appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
+    devices: 'VSAC-DEMOS/deviceset1'
+    localeOption: 'en_US'
+    showDebugOutput: true
