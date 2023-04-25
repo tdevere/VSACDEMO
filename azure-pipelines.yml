@@ -87,8 +87,9 @@ steps:
   inputs:
     app: "/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk"
     artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
+    uiTestToolsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
     frameworkOption: 'uitest'    
-    uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
+    uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
     credentialsOption: 'serviceEndpoint'
     localeOption: 'en_US'
     appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
