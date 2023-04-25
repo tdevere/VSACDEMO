@@ -87,7 +87,7 @@ steps:
 - task: AppCenterTest@1
   inputs:
     app: "/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk"
-    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
     frameworkOption: 'uitest'    
     uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
     credentialsOption: 'serviceEndpoint'
