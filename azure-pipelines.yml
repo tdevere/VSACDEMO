@@ -15,6 +15,7 @@ steps:
 - task: NuGetToolInstaller@1
 
 - task: PowerShell@2
+  displayName: Remove Unnecessary Projects
   inputs:
     targetType: 'inline'
     script: |
@@ -32,6 +33,7 @@ steps:
       write-host (${env:KeystorePassword}).Length
       write-host (${env:KeystoreAlias}).Length
       write-host (${env:KeyPassword}).Length
+      write-host [System.Environment]::GetEnvironmentVariables()
 
 - task: NuGetCommand@2
   inputs:
