@@ -15,7 +15,7 @@ steps:
 - task: NuGetToolInstaller@1
 
 - task: PowerShell@2
-  displayName: Remove Unnecessary Projects
+  displayName: Remove_Unnecessary_Projects
   inputs:
     targetType: 'inline'
     script: |
@@ -58,8 +58,7 @@ steps:
   inputs:
     filename: appcenter
     arguments: >-
-      test generate uitest --platform "android" --output-path
-      "$(Build.ArtifactStagingDirectory)/GeneratedTest"
+      test generate uitest --platform "android" --output-path "$(Build.ArtifactStagingDirectory)/GeneratedTest"
 
 - task: NuGetInstaller@0
   displayName: Restore Nuget
@@ -68,7 +67,7 @@ steps:
    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
 
 - task: MSBuild@1
-  displayName: Build UITest project
+  displayName: Build_UITest_Project
   condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
     solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
@@ -78,7 +77,7 @@ steps:
     msbuildVersion: "14.0"
 
 - task: PowerShell@2
-  displayName: Remove Unnecessary Projects
+  displayName: Debug_Check_UI_TEST_Packages
   inputs:
     targetType: 'inline'
     script: |
@@ -87,9 +86,9 @@ steps:
 - task: AppCenterTest@1
   inputs:
     app: "/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk"
-    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
     frameworkOption: 'uitest'    
-    uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
+    uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
     credentialsOption: 'serviceEndpoint'
     localeOption: 'en_US'
     appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
