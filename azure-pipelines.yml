@@ -51,6 +51,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -filter *.jks -Path $(Build.ArtifactStagingDirectory) -recurse | write-host $_
+      Get-ChildItem -filter *.jks -Path $(Build.ArtifactStagingDirectory) -recurse
 
 
