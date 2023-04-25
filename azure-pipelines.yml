@@ -32,7 +32,6 @@ steps:
       write-host "$(outputDirectory): " $(outputDirectory)"
       write-host "$(buildConfiguration): " $(buildConfiguration)"
       write-host "$(build.artifactstagingdirectory): " $(build.artifactstagingdirectory)"
-      write-host $(android_keystore)
 
 - task: NuGetCommand@2
   inputs:
