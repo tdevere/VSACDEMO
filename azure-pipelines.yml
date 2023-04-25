@@ -40,14 +40,25 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish build
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-# Build a Xamarin.Android project.
-# Add steps that test, sign, and distribute an app, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+    PathtoPublish: $(build.artifactstagingdirectory)/build
+    ArtifactName: build
 
+- task: CmdLine@1
+  displayName: Generate UITest tests
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
+  inputs:
+    filename: appcenter
+    arguments: >-
+      test generate uitest --platform "android" --output-path
+      "$(Build.ArtifactStagingDirectory)/GeneratedTest"
+
+- task: NuGetInstaller@0
+  displayName: Restore Nuget
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
+  inputs:
+    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
 - task: MSBuild@1
   displayName: Build UITest project
   condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
