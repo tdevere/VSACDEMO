@@ -38,7 +38,13 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksignerKeystoreFile: 'android_keystore.jks'
+    apksignerKeystorePassword: 'Password.1'
+    apksignerKeystoreAlias: 'Key0'
+    apksignerKeyPassword: 'Password.1'
 - task: PublishBuildArtifacts@1
   displayName: Publish build
   inputs:
