@@ -52,8 +52,43 @@ steps:
     apksignerKeystorePassword: $(KeyStorePassword)
     apksignerKeystoreAlias: $(KeyStoreAlias)
     apksignerKeyPassword: $(KeyPassword)
-- task: PublishBuildArtifacts@1
-  displayName: Publish build
+
+- task: CmdLine@1
+  displayName: Generate UITest tests
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
-    PathtoPublish: $(build.artifactstagingdirectory)/build
-    ArtifactName: build
+    filename: appcenter
+    arguments: >-
+      test generate uitest --platform "android" --output-path
+      "$(Build.ArtifactStagingDirectory)/GeneratedTest"
+
+- task: NuGetInstaller@0
+  displayName: Restore Nuget
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
+  inputs:
+   solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
+
+- task: MSBuild@1
+  displayName: Build UITest project
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
+  inputs:
+    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
+    configuration: Release
+    logProjectEvents: true
+    createLogFile: true
+    msbuildVersion: "14.0"
+
+- task: AppCenterTest@1
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
+  inputs:
+    app: "/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk"
+    artifactsDir: $(Build.ArtifactStagingDirectory)/Artifacts
+    framework: uitest
+    uitestBuildDir: >-
+      '/Users/runner/work/1/a/GeneratedTest/AppCenter.UITest.Android/bin/Release'
+      uitestStoreFile: '''
+      appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
+      devices: any_top_1_device
+      series: launch-tests  
+      runOpts: ' -p msft/test-run-origin=Build/Launch'
+      showDebugOutput: true
