@@ -9,7 +9,7 @@ variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
   system.debug: true
-  android_keystore: '/Users/runner/work/_temp/android_keystore.jks'
+
 
 steps:
 - task: NuGetToolInstaller@1
@@ -43,11 +43,15 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: android_keystore.jks
     
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/*.apk'
-    apksignerKeystoreFile: '$(Agent.TempDirectory)/android_keystore.jks'
+    apksignerKeystoreFile: 'android_keystore.jks'
     apksignerKeystorePassword: $(KeystorePassword)
     apksignerKeystoreAlias: $(KeystoreAlias)
     apksignerKeyPassword: $(KeyPassword)
