@@ -50,7 +50,7 @@ steps:
 - task: AppCenterTest@1
   condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
-    app: $(build.artifactstagingdirectory)/b/**/*.apk
+    app: $(build.artifactstagingdirectory)/**/*.apk
     artifactsDir: $(Build.ArtifactStagingDirectory)/Artifacts
     framework: uitest
     uitestBuildDir: >-
