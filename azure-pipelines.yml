@@ -58,15 +58,22 @@ steps:
     createLogFile: true
     msbuildVersion: "14.0"
 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo $(Build.ArtifactStagingDirectory)
+      Get-ChildItem -Path $(Build.ArtifactStagingDirectory) -recurse -depth 2
+
 - task: AppCenterTest@1
   condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
-    app: $(build.artifactstagingdirectory)/b/**/*.apk
+    app: "/Users/runner/work/1/b/Release/com.companyname.vsacdemo.apk"
     artifactsDir: $(Build.ArtifactStagingDirectory)/Artifacts
     framework: uitest
     uitestBuildDir: >-
-      $(Build.ArtifactStagingDirectory)/GeneratedTest/AppCenter.UITest.Android/bin/Release
-      uitestStoreFile: ''
+      '/Users/runner/work/1/a/GeneratedTest/AppCenter.UITest.Android/bin/Release'
+      uitestStoreFile: '''
       appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
       devices: any_top_1_device
       series: launch-tests  
