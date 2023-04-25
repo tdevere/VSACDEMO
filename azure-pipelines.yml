@@ -41,16 +41,16 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-- task: DownloadSecureFile@1
-  name: myKeyStore
-  displayName: 'Download_Android_KeyStore'
+    
+- task: AndroidSigning@3
   inputs:
-    secureFile: 'android_keystore.jks'
-
-- task: PowerShell@2
+    apkFiles: '**/*.apk'
+    apksignerKeystoreFile: '/Users/runner/work/_temp/android_keystore.jks'
+    apksignerKeystorePassword: $(KeystorePassword)
+    apksignerKeystoreAlias: $(KeystoreAlias)
+    apksignerKeyPassword: $(KeyPassword)
+- task: PublishBuildArtifacts@1
+  displayName: Publish build
   inputs:
-    targetType: 'inline'
-    script: |
-      Get-ChildItem -filter *.jks -Path $(Build.ArtifactStagingDirectory) -recurse
-
-
+    PathtoPublish: $(build.artifactstagingdirectory)/build
+    ArtifactName: build
