@@ -31,6 +31,8 @@ steps:
       write-host "$(outputDirectory): " $(outputDirectory)"
       write-host "$(buildConfiguration): " $(buildConfiguration)"
       write-host "$(build.artifactstagingdirectory): " $(build.artifactstagingdirectory)"
+      [System.Environment]::SetEnvironmentVariable('android_keystore','/Users/runner/work/_temp/android_keystore.jks')
+      write-host $(android_keystore)
 
 - task: NuGetCommand@2
   inputs:
@@ -45,7 +47,7 @@ steps:
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/*.apk'
-    apksignerKeystoreFile: '/Users/runner/work/_temp/android_keystore.jks'
+    apksignerKeystoreFile: $(android_keystore)
     apksignerKeystorePassword: $(KeystorePassword)
     apksignerKeystoreAlias: $(KeystoreAlias)
     apksignerKeyPassword: $(KeyPassword)
