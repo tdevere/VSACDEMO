@@ -54,7 +54,6 @@ steps:
     apksignerKeyPassword: $(KeyPassword)
 - task: CmdLine@1
   displayName: Generate UITest tests
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
     filename: appcenter
     arguments: >-
@@ -62,13 +61,11 @@ steps:
 
 - task: NuGetInstaller@0
   displayName: Restore Nuget
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
 
 - task: MSBuild@1
   displayName: Build_UITest_Project
-  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
     solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
     configuration: Release
@@ -81,15 +78,15 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -Path '/Users/runner/work/1/a/GeneratedTest/packages' -recurse
+      Get-ChildItem -Path '/Users/runner/work/1/a/GeneratedTest/packages' -recurse | select -Property Name
 
 - task: AppCenterTest@1
   inputs:
     app: "/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk"
     artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
-    uiTestToolsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
-    frameworkOption: 'uitest'    
     uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
+    uiTestToolsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
+    frameworkOption: 'uitest'
     credentialsOption: 'serviceEndpoint'
     localeOption: 'en_US'
     appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
