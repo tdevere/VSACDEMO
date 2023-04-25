@@ -29,6 +29,9 @@ steps:
           write-host "Removing $project from $SLN_PATH"
           dotnet sln $SLN_PATH remove $project
       }      
+      write-host (${env:KeystorePassword}).Length
+      write-host (${env:KeystoreAlias}).Length
+      write-host (${env:KeyPassword}).Length
 
 - task: NuGetCommand@2
   inputs:
