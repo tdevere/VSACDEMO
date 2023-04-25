@@ -58,3 +58,4 @@ steps:
     appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
     devices: 'VSAC-DEMOS/deviceset1'
     localeOption: 'en_US'
+    showDebugOutput: true
