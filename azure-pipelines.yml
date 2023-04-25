@@ -48,10 +48,20 @@ steps:
 # Add steps that test, sign, and distribute an app, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
+- task: MSBuild@1
+  displayName: Build UITest project
+  condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
+  inputs:
+    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
+    configuration: Release
+    logProjectEvents: true
+    createLogFile: true
+    msbuildVersion: "14.0"
+
 - task: AppCenterTest@1
   condition: 'and(succeeded(), ne(variables[''Build.Reason''], ''pullRequest''))'
   inputs:
-    app: $(build.artifactstagingdirectory)/**/*.apk
+    app: $(build.artifactstagingdirectory)/b/**/*.apk
     artifactsDir: $(Build.ArtifactStagingDirectory)/Artifacts
     framework: uitest
     uitestBuildDir: >-
