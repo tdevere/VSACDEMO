@@ -9,6 +9,7 @@ variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
   system.debug: true
+  android_keystore: '/Users/runner/work/_temp/android_keystore.jks'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -31,7 +32,6 @@ steps:
       write-host "$(outputDirectory): " $(outputDirectory)"
       write-host "$(buildConfiguration): " $(buildConfiguration)"
       write-host "$(build.artifactstagingdirectory): " $(build.artifactstagingdirectory)"
-      [System.Environment]::SetEnvironmentVariable('android_keystore','/Users/runner/work/_temp/android_keystore.jks')
       write-host $(android_keystore)
 
 - task: NuGetCommand@2
