@@ -47,7 +47,7 @@ steps:
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/*.apk'
-    apksignerKeystoreFile: $(android_keystore)
+    apksignerKeystoreFile: '$(Agent.TempDirectory)/android_keystore.jks'
     apksignerKeystorePassword: $(KeystorePassword)
     apksignerKeystoreAlias: $(KeystoreAlias)
     apksignerKeyPassword: $(KeyPassword)
