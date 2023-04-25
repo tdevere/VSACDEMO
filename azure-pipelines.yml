@@ -38,13 +38,19 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
+- task: DownloadSecureFile@1
+  name: myKeyStore
+  displayName: 'Download_Android_KeyStore'
+  inputs:
+    secureFile: 'android_keystore.jks'
+
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/*.apk'
-    apksignerKeystoreFile: 'android_keystore.jks'
-    apksignerKeystorePassword: 'Password.1'
-    apksignerKeystoreAlias: 'Key0'
-    apksignerKeyPassword: 'Password.1'
+    apksignerKeystoreFile: $(myKeyStore.secureFilePath)
+    apksignerKeystorePassword: $(KeystorePassword)
+    apksignerKeystoreAlias: $(KeystoreAlias)
+    apksignerKeyPassword: $(KeyPassword)
 - task: PublishBuildArtifacts@1
   displayName: Publish build
   inputs:
