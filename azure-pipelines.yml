@@ -29,9 +29,6 @@ steps:
           write-host "Removing $project from $SLN_PATH"
           dotnet sln $SLN_PATH remove $project
       }      
-      write-host "$(outputDirectory): " $(outputDirectory)"
-      write-host "$(buildConfiguration): " $(buildConfiguration)"
-      write-host "$(build.artifactstagingdirectory): " $(build.artifactstagingdirectory)"
 
 - task: NuGetCommand@2
   inputs:
