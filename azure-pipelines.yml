@@ -106,4 +106,4 @@ steps:
     releaseNotesOption: 'input'
     releaseNotesInput: 'Initial Public Release'
     destinationType: 'groups'
-    distributionGroupId: 'Public_Testers'
+    distributionGroupId: '4257310f-fe1a-47d5-a0e8-6f89d173d9b0'
