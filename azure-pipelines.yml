@@ -88,10 +88,11 @@ steps:
     uiTestToolsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
     frameworkOption: 'uitest'
     credentialsOption: 'serviceEndpoint'
-    serverEndpoint: 'AppCenter'
+    serverEndpoint: 'VSAC-DEMOS'
     localeOption: 'en_US'
     appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
     devices: any_top_1_device
     series: launch-tests
     runOpts: ' -p msft/test-run-origin=Build/Launch'
     showDebugOutput: true
+
