@@ -82,7 +82,7 @@ steps:
 
 - task: AppCenterTest@1
   inputs:
-    app: "/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk"
+    app: '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk'
     artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
     uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/AppCenter.UITest.Android/bin/Release/'
     uiTestToolsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
@@ -96,3 +96,14 @@ steps:
     runOpts: ' -p msft/test-run-origin=Build/Launch'
     showDebugOutput: true
 
+- task: AppCenterDistribute@3
+  inputs:
+    serverEndpoint: 'VSAC-DEMOS'
+    appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
+    appFile: '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk'
+    buildVersion: '1.0.0.0'
+    symbolsOption: 'Android'
+    releaseNotesOption: 'input'
+    releaseNotesInput: 'Initial Public Release'
+    destinationType: 'groups'
+    distributionGroupId: 'Public_Testers'
