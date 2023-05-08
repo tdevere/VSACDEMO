@@ -73,12 +73,13 @@ steps:
     createLogFile: true
     msbuildVersion: "14.0"
 
-- task: PowerShell@2
-  displayName: Debug_Check_UI_TEST_Packages
+- task: Bash@3
+  displayName: OPEN_SSL
   inputs:
     targetType: 'inline'
-    script: |
-      Get-ChildItem -Path '/Users/runner/work/1/a/GeneratedTest/packages' -recurse | select -Property Name
+    script: |            
+      npm install -g openssl
+      echo | openssl s_client -servername www.example.com -connect www.example.com:443 2>/dev/null | openssl x509 -text
 
 - task: AppCenterTest@1
   inputs:
