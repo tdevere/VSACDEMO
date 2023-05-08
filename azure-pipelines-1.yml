@@ -1,0 +1,109 @@
+# Xamarin.Android
+trigger:
+- master
+
+pool:
+  vmImage: 'macos-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+  system.debug: true
+
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: PowerShell@2
+  displayName: Remove_Unnecessary_Projects
+  inputs:
+    targetType: 'inline'
+    script: |
+      $SLN_PATH = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.sln -recurse
+      $AllProjects = Get-ChildItem -Path '/Users/runner/work/1/s/VSACDEMO' -Include *.csproj -Exclude "*Android*.csproj", "VSACDEMO.csproj" -Recurse
+
+      write-host $SLN_PATH
+      write-host $AllProjects
+      
+      foreach ($project in $AllProjects)
+      {
+          write-host "Removing $project from $SLN_PATH"
+          dotnet sln $SLN_PATH remove $project
+      }      
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
+
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/*droid*.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: android_keystore.jks
+    
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksignerKeystoreFile: 'android_keystore.jks'
+    apksignerKeystorePassword: $(KeyStorePassword)
+    apksignerKeystoreAlias: $(KeyStoreAlias)
+    apksignerKeyPassword: $(KeyPassword)
+- task: CmdLine@1
+  displayName: Generate UITest tests
+  inputs:
+    filename: appcenter
+    arguments: >-
+      test generate uitest --platform "android" --output-path "$(Build.ArtifactStagingDirectory)/GeneratedTest"
+
+- task: NuGetInstaller@0
+  displayName: Restore Nuget
+  inputs:
+   solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
+
+- task: MSBuild@1
+  displayName: Build_UITest_Project
+  inputs:
+    solution: $(Build.ArtifactStagingDirectory)/GeneratedTest/*.sln
+    configuration: Release
+    logProjectEvents: true
+    createLogFile: true
+    msbuildVersion: "14.0"
+
+- task: Bash@3
+  displayName: OPEN_SSL
+  inputs:
+    targetType: 'inline'
+    script: |            
+      npm install -g openssl
+      echo | openssl s_client -servername www.example.com -connect www.example.com:443 2>/dev/null | openssl x509 -text
+- task: AppCenterTest@1
+  inputs:
+    app: '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest'
+    uiTestBuildDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/AppCenter.UITest.Android/bin/Release/'
+    uiTestToolsDirectory: '$(Build.ArtifactStagingDirectory)/GeneratedTest/packages/Xamarin.UITest.3.2.9/tools'
+    frameworkOption: 'uitest'
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'VSAC-DEMOS'
+    localeOption: 'en_US'
+    appSlug: VSAC-DEMOS/DEMO1_Xamarin_Android
+    devices: any_top_1_device
+    series: launch-tests
+    runOpts: ' -p msft/test-run-origin=Build/Launch'
+    showDebugOutput: true
+
+- task: AppCenterDistribute@3
+  inputs:
+    serverEndpoint: 'VSAC-DEMOS'
+    appSlug: 'VSAC-DEMOS/DEMO1_Xamarin_Android'
+    appFile: '/Users/runner/work/1/s/VSACDEMO/VSACDEMO.Android/obj/Release/android/bin/com.companyname.vsacdemo.apk'
+    buildVersion: '1.0.0.0'
+    symbolsOption: 'Android'
+    releaseNotesOption: 'input'
+    releaseNotesInput: 'Initial Public Release'
+    destinationType: 'groups'
+    distributionGroupId: '4257310f-fe1a-47d5-a0e8-6f89d173d9b0'
